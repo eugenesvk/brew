@@ -102,15 +102,13 @@ module Homebrew
         tier_title, tier_slug, tier_issues = if tier.to_s == "unsupported"
           ["an Unsupported", "unsupported", "Do not report any issues"]
         else
-          ["a Tier #{tier}", "tier-#{tier.to_s.downcase}", "You can report issues with Tier #{tier} configurations"]
+          ["", "", ""]
         end
 
         tier_issues = "Report issues to the upstream Nix project, not" if OS.nix_managed_homebrew?
 
         <<~EOS
-          #{Formatter.url("docs.brew.sh/Support-Tiers##{tier_slug}")}
-          #{Formatter.bold("#{tier_issues} to Homebrew/* repositories!")}
-            #{Formatter.url(OS::ISSUES_URL) if defined?(OS::ISSUES_URL)}
+          #{Formatter.url(OS::ISSUES_URL) if defined?(OS::ISSUES_URL)}
         EOS
       end
     end

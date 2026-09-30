@@ -113,7 +113,7 @@ module Homebrew
         return if !intel && !version.outdated_release?
         return if version > :tahoe
 
-        remediation = +"Homebrew no longer builds bottles for this configuration.\n"
+        remediation = +"Homebrew no longer builds bottles for this configuration. "
         # At the time of writing, MacPorts does not provide a full set of binary packages
         # for Intel Tahoe:
         # https://build.macports.org/builders/ports-26_x86_64-builder
@@ -123,8 +123,6 @@ module Homebrew
           EOS
         else
           <<~EOS
-            Consider MacPorts, which provides binary packages for this macOS version:
-              #{Formatter.url("https://www.macports.org")}
           EOS
         end
       end

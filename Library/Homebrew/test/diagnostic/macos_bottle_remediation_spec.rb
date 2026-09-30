@@ -9,9 +9,7 @@ RSpec.describe Homebrew::Diagnostic::Checks do
   describe "#macos_bottle_remediation" do
     it "recommends MacPorts binaries on outdated Intel macOS" do
       expect(checks.macos_bottle_remediation(MacOSVersion.new("13"), intel: true)).to eq <<~EOS
-        Homebrew no longer builds bottles for this configuration.
-        Consider MacPorts, which provides binary packages for this macOS version:
-          https://www.macports.org
+        Homebrew no longer builds bottles for this config, check MacPorts
       EOS
     end
 
