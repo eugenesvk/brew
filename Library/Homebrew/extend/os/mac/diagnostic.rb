@@ -143,12 +143,6 @@ module OS
             version = "on Intel x86_64"
             <<~EOS
               platform (as-of September 2026, announced August 2025).
-
-              Apple have dropped Intel x86_64 support in macOS Golden Gate (27).
-              GitHub Actions are dropping macOS Intel x86_64 runners in 2027.
-              Homebrew is a non-profit project run entirely by volunteers, not employees.
-              If the biggest companies in the world cannot support macOS Intel x86_64
-              any longer, sadly neither can we.
             EOS
           elsif OS::Mac.version.prerelease?
             "pre-release version."
@@ -159,8 +153,7 @@ module OS
 
           ::Homebrew::Diagnostic::Finding.new(
             <<~EOS,
-              You are using macOS #{version}.
-              #{who} do not provide support for this #{what.chomp}
+              macOS #{version} unsupported #{what.chomp}
             EOS
             tier:,
             remediation: macos_bottle_remediation(MacOS.version, intel: ::Hardware::CPU.intel?),
