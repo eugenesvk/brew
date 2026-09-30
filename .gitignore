@@ -32,6 +32,7 @@
 # Ignore Bundler files
 **/.bundle/bin
 **/.bundle/cache
+/Library/Homebrew/sorbet/**
 **/vendor/bundle/ruby/**
 **/vendor/bundle/ruby/.homebrew_gem_groups
 **/vendor/bundle/ruby/*/.homebrew_vendor_version
