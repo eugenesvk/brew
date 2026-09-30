@@ -108,11 +108,9 @@ module Homebrew
         tier_issues = "Report issues to the upstream Nix project, not" if OS.nix_managed_homebrew?
 
         <<~EOS
-          This is #{tier_title} configuration:
-            #{Formatter.url("https://docs.brew.sh/Support-Tiers##{tier_slug}")}
+          #{Formatter.url("docs.brew.sh/Support-Tiers##{tier_slug}")}
           #{Formatter.bold("#{tier_issues} to Homebrew/* repositories!")}
             #{Formatter.url(OS::ISSUES_URL) if defined?(OS::ISSUES_URL)}
-          Read the above document before opening any issues or PRs.
         EOS
       end
     end
