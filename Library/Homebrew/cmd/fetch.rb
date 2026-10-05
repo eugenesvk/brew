@@ -56,6 +56,9 @@ module Homebrew
         switch "--force-bottle",
                description: "Download a bottle if it exists for the current or newest version of macOS, " \
                             "even if it would not be used during installation."
+        switch "--[no-]quarantine",
+               description: "Disable/enable quarantining of downloads (default: enabled).",
+               env:         :cask_opts_quarantine
         switch "--formula", "--formulae",
                description: "Treat all named arguments as formulae."
         switch "--cask", "--casks",
@@ -192,6 +195,9 @@ module Homebrew
       def cask_downloads(cask)
         ref = cask.reloadable_ref
 
+        quarantine = args.quarantine?
+        quarantine = true if quarantine.nil?
+
         if args.all_platforms? && cask.loaded_from_api?
           opoo "Cask #{cask} was loaded from the API; cannot fetch all operating system and " \
                "architecture variants. Set `HOMEBREW_NO_INSTALL_FROM_API=1` to fetch them all."
@@ -240,6 +246,7 @@ module Homebrew
 
               downloads << Cask::Download.new(
                 localized_cask,
+                quarantine:,
                 require_sha: Homebrew::EnvConfig.cask_opts_require_sha?,
               )
             end
@@ -342,6 +349,7 @@ module Homebrew
           download = Homebrew::API::CaskDownload.download(
             token:,
             cask_struct: Homebrew::API::Internal.cask_struct(token),
+            quarantine:,
             require_sha: Homebrew::EnvConfig.cask_opts_require_sha?,
           )
           return false if download.nil?
