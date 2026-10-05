@@ -25,13 +25,15 @@ module Cask
     sig {
       params(
         cask:        ::Cask::Cask,
+        quarantine:  T.nilable(T::Boolean),
         require_sha: T::Boolean,
       ).void
     }
-    def initialize(cask, require_sha: false)
+    def initialize(cask, quarantine: nil, require_sha: false)
       super()
 
       @cask = cask
+      @quarantine = quarantine
       @require_sha = require_sha
     end
 
@@ -126,6 +128,7 @@ module Cask
         container.extract_nestedly(to:, basename:, verbose:)
       end
 
+      return unless @quarantine
       Quarantine.propagate(from: container.path, to:)
     end
 
@@ -252,6 +255,7 @@ module Cask
 
     sig { params(path: Pathname).void }
     def quarantine(path)
+      return if @quarantine.nil?
       Quarantine.cask!(cask: @cask, download_path: path)
     end
 

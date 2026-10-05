@@ -12,7 +12,7 @@ module Cask
     sig {
       params(
         casks: ::Cask::Cask, verbose: T::Boolean, force: T::Boolean, skip_cask_deps: T::Boolean, binaries: T::Boolean,
-        require_sha: T::Boolean, zap: T::Boolean, skip_prefetch: T::Boolean,
+        require_sha: T::Boolean, quarantine: T::Boolean, zap: T::Boolean, skip_prefetch: T::Boolean,
         download_queue: T.nilable(Homebrew::DownloadQueue),
         cask_installers: T.nilable(T::Array[Installer])
       ).returns(T::Array[Cask])
@@ -24,11 +24,13 @@ module Cask
       skip_cask_deps: false,
       binaries: false,
       require_sha: false,
+      quarantine: false,
       zap: false,
       skip_prefetch: false,
       download_queue: nil,
       cask_installers: nil
     )
+      quarantine = true if quarantine.nil?
       created_download_queue = T.let(false, T::Boolean)
       if download_queue.nil?
         if skip_prefetch
@@ -51,6 +53,7 @@ module Cask
               skip_cask_deps:,
               require_sha:,
               reinstall:      true,
+              quarantine:,
               zap:,
               download_queue:,
               defer_fetch:    true,

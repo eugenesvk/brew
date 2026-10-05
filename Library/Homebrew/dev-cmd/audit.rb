@@ -283,6 +283,7 @@ module Homebrew
 
                 audit_signing:  nil,
                 audit_new_cask: args.new? || nil,
+                quarantine:     true,
                 audit_fix:      args.fix? || nil,
                 any_named_args: !no_named_args,
                 only:           args.only || [],

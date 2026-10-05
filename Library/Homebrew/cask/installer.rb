@@ -34,7 +34,7 @@ module Cask
         cask: ::Cask::Cask, command: T.class_of(SystemCommand), force: T::Boolean, adopt: T::Boolean,
         skip_cask_deps: T::Boolean, binaries: T::Boolean, verbose: T::Boolean, zap: T::Boolean,
         require_sha: T::Boolean, upgrade: T::Boolean, reinstall: T::Boolean,
-        installed_on_request: T::Boolean, verify_download_integrity: T::Boolean,
+        installed_on_request: T::Boolean, quarantine: T::Boolean, verify_download_integrity: T::Boolean,
         quiet: T::Boolean, download_queue: Homebrew::DownloadQueue, defer_fetch: T::Boolean,
         default_uninstall_artifacts: T.nilable(ArtifactSet)
       ).void
@@ -43,7 +43,7 @@ module Cask
                    skip_cask_deps: false, binaries: true, verbose: false,
                    zap: false, require_sha: false, upgrade: false, reinstall: false,
                    installed_on_request: true,
-                   verify_download_integrity: true, quiet: false,
+                   quarantine: true, verify_download_integrity: true, quiet: false,
                    download_queue: Homebrew::DownloadQueue.default, defer_fetch: false,
                    default_uninstall_artifacts: nil)
       @cask = cask
@@ -58,6 +58,7 @@ module Cask
       @reinstall = reinstall
       @upgrade = upgrade
       @installed_on_request = installed_on_request
+      @quarantine = quarantine
       @verify_download_integrity = verify_download_integrity
       @quiet = quiet
       @download_queue = download_queue
@@ -94,6 +95,9 @@ module Cask
 
     sig { returns(T::Boolean) }
     def installed_on_request? = @installed_on_request
+
+    sig { returns(T::Boolean) }
+    def quarantine? = @quarantine
 
     sig { returns(T::Boolean) }
     def quiet? = @quiet
@@ -194,6 +198,11 @@ module Cask
       backup if force? && @cask.staged_path.exist? && @cask.metadata_versioned_path.exist?
 
       oh1 "Installing Cask #{Formatter.identifier(@cask)}"
+      # GitHub Actions globally disables Gatekeeper.
+      unless quarantine?
+        opoo_outside_github_actions "--no-quarantine bypasses macOS’s Gatekeeper, reducing system security. " \
+                                    "Do not use this flag unless you understand the risks."
+      end
       stage
 
       @cask.config = @cask.default_config.merge(old_config)
@@ -289,9 +298,10 @@ on_request: true)
              token:       @cask.token,
              cask_struct: Homebrew::API::Internal.cask_struct(@cask.token),
              languages:   @cask.config.languages,
+             quarantine:  quarantine?,
              require_sha: require_sha? && !force?,
            )
-        end) || Download.new(@cask, require_sha: require_sha? && !force?),
+        end) || Download.new(@cask, quarantine: quarantine?, require_sha: require_sha? && !force?),
         T.nilable(Download),
       )
     end
@@ -553,6 +563,7 @@ on_request: true)
             binaries:             binaries?,
             force:                false,
             installed_on_request: false,
+            quarantine:           quarantine?,
             quiet:                quiet?,
             require_sha:          require_sha?,
             verbose:              verbose?,

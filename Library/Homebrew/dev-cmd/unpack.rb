@@ -112,7 +112,7 @@ module Homebrew
 
         oh1 "Unpacking #{Formatter.identifier(cask.full_name)} to: #{stage_dir}"
 
-        download = Cask::Download.new(cask)
+        download = Cask::Download.new(cask, quarantine: true)
 
         downloaded_path = if download.downloaded?
           download.cached_download

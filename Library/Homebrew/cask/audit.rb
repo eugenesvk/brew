@@ -49,7 +49,7 @@ module Cask
 
     sig {
       params(
-        cask: ::Cask::Cask, download: T::Boolean,
+        cask: ::Cask::Cask, download: T::Boolean, quarantine: T::Boolean,
         online: T.nilable(T::Boolean), strict: T.nilable(T::Boolean), signing: T.nilable(T::Boolean),
         new_cask: T.nilable(T::Boolean), fix: T.nilable(T::Boolean),
         only: T::Array[String], except: T::Array[String]
@@ -57,7 +57,7 @@ module Cask
     }
     def initialize(
       cask,
-      download: false,
+      download: false, quarantine: false,
       online: nil, strict: nil, signing: nil,
       new_cask: nil, fix: nil, only: [], except: []
     )
@@ -71,7 +71,7 @@ module Cask
 
       @cask = cask
       @download = T.let(nil, T.nilable(Download))
-      @download = Download.new(cask) if download
+      @download = Download.new(cask, quarantine:) if download
       @download_failed = T.let(false, T::Boolean)
       @online = online
       @strict = strict
