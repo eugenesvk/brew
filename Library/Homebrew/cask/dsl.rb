@@ -825,6 +825,10 @@ module Cask
 
       @disable_date = Date.parse(date)
 
+      if because == :fails_gatekeeper_check # disable fails_gatekeeper_check
+        @deprecated = false
+        return
+      end
       if @disable_date > Date.today
         @deprecation_reason = because
         @deprecation_replacement_formula = replacement_formula.presence || replacement
