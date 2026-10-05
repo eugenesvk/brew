@@ -181,6 +181,12 @@ module Homebrew
 
       sig { override.void }
       def run
+        puts "fn: run @install.rb"
+        if    @quarantine.nil?; puts "quarantine nil";
+        elsif @quarantine     ; puts "quarantine";
+        else                  ; puts "quarantine not"; end
+        if    args.quarantine?; puts "args.quarantine";
+        else                  ; puts "args.quarantine not"; end
         if args.env.present?
           # Can't use `replacement: false` because `install_args` are used by
           # `build.rb`. Instead, `hide_from_man_page` and don't do anything with
@@ -397,6 +403,7 @@ module Homebrew
             dependent_formulae_installer &= all_formulae_installer
 
             if fetch_casks.any?
+              puts "fetch casks args.quarantine? = #{args.quarantine?}"
               prefetched_cask_installers = fetch_casks.map do |cask|
                 Cask::Installer.new(
                   cask,

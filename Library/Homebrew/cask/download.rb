@@ -211,6 +211,10 @@ module Cask
     def downloaded_and_valid?
       return false unless super
 
+      puts "quarantine(cached_download)"
+      if   @quarantine.nil?; puts "quarantine nil";
+      elif @quarantine     ; puts "quarantine";
+      else                 ; puts "quarantine not"; end
       quarantine(cached_download)
       true
     end
@@ -255,8 +259,18 @@ module Cask
 
     sig { params(path: Pathname).void }
     def quarantine(path)
-      return if @quarantine.nil?
-      Quarantine.cask!(cask: @cask, download_path: path)
+      # return if @quarantine.nil?
+      if @quarantine.nil?
+        puts "quarantine nil, returning"
+        return
+      end
+      if @quarantine
+        puts "quarantine, cask dl path"
+        Quarantine.cask!(   cask: @cask, download_path: path)
+      else
+        puts "quarantine not, release"
+        Quarantine.release!(             download_path: path)
+      end
     end
 
     sig { returns(T::Boolean) }
