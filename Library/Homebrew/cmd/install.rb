@@ -149,6 +149,10 @@ module Homebrew
             description: "Require all casks to have a checksum.",
             env:         :cask_opts_require_sha,
           }],
+          [:switch, "--[no-]quarantine", {
+            description: "Disable/enable quarantining of downloads (default: enabled).",
+            env:         :cask_opts_quarantine,
+          }],
           [:switch, "--adopt", {
             description: "Adopt existing artifacts in the destination that are identical to those being installed. " \
                          "Cannot be combined with `--force`.",
@@ -403,6 +407,7 @@ module Homebrew
                   quiet:          args.quiet?,
                   skip_cask_deps: args.skip_cask_deps?,
                   require_sha:    args.require_sha?,
+                  quarantine:     args.quarantine?,
                   upgrade:        upgrade_casks.include?(cask),
                   download_queue:,
                   defer_fetch:    true,
@@ -463,6 +468,7 @@ module Homebrew
               adopt:          args.adopt?,
               binaries:       args.binaries?,
               force:          args.force?,
+              quarantine:     args.quarantine?,
               quiet:          args.quiet?,
               require_sha:    args.require_sha?,
               skip_cask_deps: args.skip_cask_deps?,
@@ -481,6 +487,7 @@ module Homebrew
                 force:                      args.force?,
                 dry_run:                    args.dry_run?,
                 binaries:                   args.binaries?,
+                quarantine:           			args.quarantine?,
                 require_sha:                args.require_sha?,
                 skip_cask_deps:             args.skip_cask_deps?,
                 verbose:                    args.verbose?,
