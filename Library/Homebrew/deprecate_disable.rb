@@ -28,7 +28,6 @@ module DeprecateDisable
     no_longer_available:      "is no longer available upstream",
     no_longer_meets_criteria: "no longer meets the criteria for acceptable casks",
     unmaintained:             "is not maintained upstream",
-    fails_gatekeeper_check:   "does not pass the macOS Gatekeeper check",
     unreachable:              "is no longer reliably reachable upstream",
   }.freeze, T::Hash[Symbol, String])
 

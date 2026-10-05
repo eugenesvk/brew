@@ -608,7 +608,7 @@ module Cask
 
       deprecated_or_disabled = cask.deprecated? || cask.disabled?
       deprecate_disable_reason = cask.disabled? ? cask.disable_reason : cask.deprecation_reason
-      gatekeeper_failure_expected = deprecate_disable_reason == :fails_gatekeeper_check
+      gatekeeper_failure_expected = false
       return if deprecated_or_disabled && !gatekeeper_failure_expected
 
       unless Quarantine.available?
